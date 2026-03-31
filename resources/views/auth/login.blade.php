@@ -1,0 +1,59 @@
+<x-guest-layout>
+    <div class="mb-6">
+        <p class="text-sm uppercase tracking-[0.24em] text-[var(--muted)]">Masuk</p>
+        <h1 class="mt-2 font-heading text-3xl text-[var(--coffee)]">Akses akun dan pantau pesanan.</h1>
+        <p class="mt-3 text-sm text-[var(--muted)]">Belum punya akun?
+            <a href="{{ route('register') }}"
+                class="font-semibold text-[var(--coffee)] underline-offset-2 hover:underline">Daftar sekarang</a>
+        </p>
+    </div>
+
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+
+        <!-- Email Address -->
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
+                autocomplete="current-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Remember Me -->
+        <div class="block mt-4">
+            <label for="remember_me" class="inline-flex items-center">
+                <input id="remember_me" type="checkbox"
+                    class="rounded border-[var(--line)] text-[var(--accent)] shadow-sm focus:ring-[var(--accent)]"
+                    name="remember">
+                <span class="ms-2 text-sm text-[var(--muted)]">Ingat saya</span>
+            </label>
+        </div>
+
+        <div class="mt-6 flex items-center justify-between gap-4">
+            @if (Route::has('password.request'))
+                <a class="text-sm font-semibold text-[var(--muted)] transition hover:text-[var(--coffee)]"
+                    href="{{ route('password.request') }}">
+                    Lupa password?
+                </a>
+            @endif
+
+            <x-primary-button
+                class="ms-3 bg-[var(--accent)] text-white hover:bg-[var(--accent-deep)] focus:bg-[var(--accent-deep)]">
+                Masuk
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>
