@@ -6,14 +6,14 @@
     <section class="section-shell pt-10 sm:pt-16">
         <div class="grid items-center gap-8 lg:grid-cols-[1.1fr,0.9fr] lg:gap-12">
             <div>
-                <p class="eyebrow">PWA E-commerce untuk Home Roastery Mantap Sekali</p>
+                <p class="eyebrow">E-commerce untuk Home Roastery</p>
                 <h1 class="mt-4 max-w-3xl font-heading text-5xl leading-[1.02] text-[var(--coffee)] sm:text-6xl">
                     {{ $siteSettings['hero_title'] ?? 'Small batch coffee roasted with intention.' }}</h1>
                 <p class="mt-6 max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">
                     {{ $siteSettings['hero_subtitle'] ?? 'Kopi sangrai harian dengan karakter rasa yang jernih, hangat, dan konsisten untuk rumah maupun kedai kecil.' }}
                 </p>
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('catalog.index') }}" class="btn-earth">Belanja Biji Kopi Guys</a>
+                    <a href="{{ route('catalog.index') }}" class="btn-earth">Belanja Biji Kopi</a>
                     <a href="{{ route('articles.index') }}" class="btn-ghost">Baca Jurnal</a>
                 </div>
                 <div class="mt-10 grid gap-4 sm:grid-cols-3">

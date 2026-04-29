@@ -8,8 +8,8 @@
     <meta name="theme-color" content="#6f3b24">
     <meta name="description" content="PWA ecommerce dan dashboard mini untuk home coffee roastery.">
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
-    <link rel="icon" href="{{ asset('icons/icon.svg') }}" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="{{ asset('icons/icon.svg') }}">
+    <link rel="icon" href="{{ asset('surakana.png') }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('surakana.png') }}">
     <title>@yield('title', config('app.name', 'Surakana'))</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=fraunces:600,700|manrope:400,500,600,700,800&display=swap"
@@ -28,10 +28,7 @@
         <header class="relative z-10 border-b border-[var(--line)]/70 bg-[rgba(248,243,236,0.88)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
                 <a href="{{ route('home') }}" class="flex items-center gap-3">
-                    <span
-                        class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--coffee)] text-[var(--canvas)] shadow-[0_12px_30px_rgba(55,30,20,0.18)]">
-                        <x-application-logo class="h-7 w-7" />
-                    </span>
+                    <x-application-logo class="h-12 w-auto" />
                     <div>
                         <p class="font-heading text-xl tracking-[0.18em] text-[var(--coffee)]">SURAKANA</p>
                         <p class="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">home roastery</p>
@@ -85,10 +82,9 @@
                         {{ $siteSettings['about_text'] ?? 'Home roastery dengan batch kecil, roast segar, dan pendekatan rasa yang konsisten.' }}
                     </p>
                 </div>
-                <div class="grid gap-3 text-sm">
+                <div class="grid text-sm">
                     <p>WhatsApp: {{ $siteSettings['contact_whatsapp'] ?? '-' }}</p>
                     <p>Instagram: {{ $siteSettings['contact_instagram'] ?? '-' }}</p>
-                    <p>PWA siap dipasang untuk akses cepat dan fallback offline sederhana.</p>
                 </div>
             </div>
         </footer>

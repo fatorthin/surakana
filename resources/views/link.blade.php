@@ -7,7 +7,7 @@
     <meta name="keywords" content="surakana, roastery, kopi, coffee, solo, surakarta">
     <meta name="description" content="Surakana Roastery – Kopi pilihan dari Solo untuk semua kalangan.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" href="{{ asset('surakana.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
