@@ -38,6 +38,7 @@
                 <nav class="hidden items-center gap-6 text-sm font-semibold md:flex">
                     <a class="nav-chip" href="{{ route('catalog.index') }}">Katalog</a>
                     <a class="nav-chip" href="{{ route('articles.index') }}">Jurnal</a>
+                    <a class="nav-chip" href="{{ url('/link') }}" target="_blank" rel="noopener noreferrer">Link</a>
                     @auth
                         @if (auth()->user()->isAdmin())
                             <a class="nav-chip" href="{{ route('admin.dashboard') }}">Admin</a>
