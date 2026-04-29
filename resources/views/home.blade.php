@@ -13,7 +13,7 @@
                     {{ $siteSettings['hero_subtitle'] ?? 'Kopi sangrai harian dengan karakter rasa yang jernih, hangat, dan konsisten untuk rumah maupun kedai kecil.' }}
                 </p>
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('catalog.index') }}" class="btn-earth">Belanja Biji Kopi</a>
+                    <a href="{{ route('catalog.index') }}" class="btn-earth">Belanja Biji Kopi Guys</a>
                     <a href="{{ route('articles.index') }}" class="btn-ghost">Baca Jurnal</a>
                 </div>
                 <div class="mt-10 grid gap-4 sm:grid-cols-3">
