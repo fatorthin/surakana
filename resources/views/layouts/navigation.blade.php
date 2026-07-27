@@ -32,6 +32,8 @@
                             href="{{ route('admin.finances.index') }}">Keuangan</a>
                         <a class="nav-chip {{ request()->routeIs('admin.roasting-logs.*') ? 'nav-chip-active' : '' }}"
                             href="{{ route('admin.roasting-logs.index') }}">Roasting Log</a>
+                        <a class="nav-chip {{ request()->routeIs('admin.users.*') ? 'nav-chip-active' : '' }}"
+                            href="{{ route('admin.users.index') }}">Pengguna</a>
                         <a class="nav-chip {{ request()->routeIs('admin.articles.*') ? 'nav-chip-active' : '' }}"
                             href="{{ route('admin.articles.index') }}">Konten</a>
                         <a class="nav-chip {{ request()->routeIs('admin.settings.*') ? 'nav-chip-active' : '' }}"
@@ -125,6 +127,7 @@
                 <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">Pesanan</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.finances.index')" :active="request()->routeIs('admin.finances.*')">Keuangan</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.roasting-logs.index')" :active="request()->routeIs('admin.roasting-logs.*')">Roasting Log</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">Pengguna</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.articles.index')" :active="request()->routeIs('admin.articles.*')">Konten</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.settings.edit')" :active="request()->routeIs('admin.settings.*')">Pengaturan</x-responsive-nav-link>
             @else

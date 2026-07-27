@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoastLogController as AdminRoastLogController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
@@ -57,6 +58,7 @@ Route::middleware(['auth', 'admin'])
         Route::get('roasting-logs/session', [AdminRoastLogController::class, 'session'])->name('roasting-logs.session');
         Route::delete('roasting-logs/session', [AdminRoastLogController::class, 'cancelSession'])->name('roasting-logs.session.cancel');
         Route::post('roasting-logs', [AdminRoastLogController::class, 'store'])->name('roasting-logs.store');
+        Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
         Route::resource('articles', AdminArticleController::class)->only(['index', 'create', 'edit']);
         Route::get('settings', [AdminSettingController::class, 'edit'])->name('settings.edit');
     });
