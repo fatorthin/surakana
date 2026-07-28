@@ -14,15 +14,7 @@ class RoastLogController extends Controller
 {
     public function index(): View
     {
-        $roasterNames = RoastLog::query()
-            ->select('roaster_name')
-            ->distinct()
-            ->orderBy('roaster_name')
-            ->pluck('roaster_name')
-            ->all();
-
         return view('admin.roasting-logs.index', [
-            'roasterNames'  => $roasterNames,
             'activeSession' => session('roast_session'),
         ]);
     }

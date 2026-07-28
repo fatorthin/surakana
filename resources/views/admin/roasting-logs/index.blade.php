@@ -54,13 +54,18 @@
                         <div class="grid gap-4 sm:grid-cols-2">
                             <div>
                                 <x-input-label for="rl-roaster" value="Nama Roaster *" />
-                                <x-text-input id="rl-roaster" name="roaster_name" :value="old('roaster_name')" list="roasterList"
-                                    class="mt-1 block w-full" placeholder="Operator" required />
-                                <datalist id="roasterList">
-                                    @foreach ($roasterNames as $name)
-                                        <option value="{{ $name }}"></option>
+                                <select id="rl-roaster" name="roaster_name"
+                                    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    required>
+                                    <option value="" disabled {{ !old('roaster_name') ? 'selected' : '' }}>Pilih
+                                        Roaster</option>
+                                    @foreach (['Ndaru', 'Bhetris', 'Fathin', 'Arba'] as $name)
+                                        <option value="{{ $name }}"
+                                            {{ old('roaster_name') == $name ? 'selected' : '' }}>
+                                            {{ $name }}
+                                        </option>
                                     @endforeach
-                                </datalist>
+                                </select>
                                 <x-input-error :messages="$errors->get('roaster_name')" class="mt-2" />
                             </div>
                             <div>
@@ -80,8 +85,17 @@
                             </div>
                             <div>
                                 <x-input-label for="rl-varietas" value="Varietas" />
-                                <x-text-input id="rl-varietas" name="varietas" :value="old('varietas')"
-                                    class="mt-1 block w-full" placeholder="Arabica, Robusta..." />
+                                <select id="rl-varietas" name="varietas"
+                                    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                    <option value="" disabled {{ !old('varietas') ? 'selected' : '' }}>Pilih
+                                        Varietas</option>
+                                    @foreach (['Arabica', 'Robusta'] as $var)
+                                        <option value="{{ $var }}"
+                                            {{ old('varietas') == $var ? 'selected' : '' }}>
+                                            {{ $var }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 <x-input-error :messages="$errors->get('varietas')" class="mt-2" />
                             </div>
                             <div>
