@@ -457,14 +457,14 @@
 
         {{-- ── Cancel confirm modal ── --}}
         <div x-show="showCancelModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div class="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl">
-                <p class="font-heading text-lg text-[var(--coffee)]">Batalkan Batch?</p>
-                <p class="mt-1 text-sm text-[var(--muted)]">Data timer, checklist, dan suhu yang belum tersimpan akan
+            <div class="w-full max-w-sm rounded-3xl bg-white p-5 sm:p-6 shadow-xl">
+                <p class="font-heading text-base text-[var(--coffee)] sm:text-lg">Batalkan Batch?</p>
+                <p class="mt-2 text-sm text-[var(--muted)]">Data timer, checklist, dan suhu yang belum tersimpan akan
                     hilang.</p>
                 <div class="mt-5 flex justify-end gap-3">
-                    <button @click="showCancelModal = false" class="btn-ghost">Tidak</button>
+                    <button @click="showCancelModal = false" class="btn-ghost text-sm">Tidak</button>
                     <button @click="doCancel()"
-                        class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-red-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
+                        class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 sm:px-5">
                         Ya, Batalkan
                     </button>
                 </div>
@@ -472,29 +472,33 @@
         </div>
 
         {{-- ── Top action bar ── --}}
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
             <button @click="showCancelModal = true"
-                class="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-red-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-800">
+                class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-red-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-800 sm:w-auto">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                Batalkan Batch
+                <span class="hidden sm:inline">Batalkan Batch</span>
+                <span class="sm:hidden">Batalkan</span>
             </button>
 
-            <button x-show="showFinish" x-cloak @click="doFinish()" class="btn-earth inline-flex items-center gap-2">
+            <button x-show="showFinish" x-cloak @click="doFinish()"
+                class="btn-earth inline-flex w-full items-center justify-center gap-2 sm:w-auto">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                Selesai &amp; Simpan Batch
+                <span class="hidden sm:inline">Selesai &amp; Simpan Batch</span>
+                <span class="sm:hidden">Selesai &amp; Simpan</span>
             </button>
         </div>
 
         {{-- ── Sticky timer bar ── --}}
         <div class="sticky top-[72px] z-[9] overflow-hidden rounded-2xl bg-[var(--coffee)] shadow-lg">
-            <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+            <div
+                class="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 sm:py-4">
                 <span x-text="timerDisplay"
-                    class="font-mono text-5xl font-bold tracking-tight text-[var(--accent)]">0:00</span>
-                <p x-text="metaText" class="max-w-xs text-right text-xs leading-5 text-white/70"></p>
+                    class="font-mono text-3xl font-bold tracking-tight text-[var(--accent)] sm:text-5xl">0:00</span>
+                <p x-text="metaText" class="text-xs leading-5 text-white/70 sm:max-w-xs sm:text-right"></p>
             </div>
         </div>
 
@@ -520,25 +524,27 @@
         {{-- ── Temperature input ── --}}
         <div class="surface-card p-5">
             <p class="eyebrow mb-3">Input Suhu Manual (°C)</p>
-            <div class="flex gap-3">
+            <div class="flex flex-col gap-3 sm:flex-row">
                 <input type="number" inputmode="decimal" x-model="tempInput" @keydown.enter.prevent="logTemp()"
-                    class="flex-1 rounded-2xl border border-[var(--line)] bg-white py-4 text-center text-3xl font-mono focus:border-[var(--accent)] focus:ring-0"
+                    class="flex-1 rounded-2xl border border-[var(--line)] bg-white py-3 text-center text-2xl font-mono sm:py-4 sm:text-3xl focus:border-[var(--accent)] focus:ring-0"
                     placeholder="0°">
-                <button @click="logTemp()" class="btn-earth shrink-0 px-6">Catat Suhu</button>
+                <button @click="logTemp()" class="btn-earth whitespace-nowrap px-4 sm:px-6">Catat Suhu</button>
             </div>
 
             <p class="eyebrow mb-2 mt-4">Log Suhu &amp; Checklist</p>
-            <div class="max-h-44 space-y-0.5 overflow-y-auto rounded-xl bg-[var(--canvas)] p-3">
+            <div class="max-h-44 space-y-0.5 overflow-y-auto rounded-xl bg-[var(--canvas)] p-2 sm:p-3">
                 <template x-if="combinedLog.length === 0">
-                    <p class="text-sm text-[var(--muted)]">Belum ada data suhu / checklist.</p>
+                    <p class="text-xs text-[var(--muted)] sm:text-sm">Belum ada data suhu / checklist.</p>
                 </template>
                 <template x-for="(entry, idx) in combinedLog" :key="idx">
-                    <div class="flex justify-between border-b border-[var(--line)] py-1 text-sm last:border-0">
-                        <span x-text="_fmt(entry.time)" class="font-mono text-[var(--muted)]"></span>
-                        <span x-text="entry.type === 'temp' ? entry.temp + '°C' : '☕ ' + entry.label"
+                    <div
+                        class="flex justify-between gap-2 border-b border-[var(--line)] py-1 text-xs sm:text-sm last:border-0">
+                        <span x-text="_fmt(entry.time)" class="font-mono text-[var(--muted)] shrink-0"></span>
+                        <span x-text="entry.type === 'temp' ? entry.temp + '°C' : entry.label"
                             :class="entry.type === 'stage' ?
                                 'font-semibold text-[var(--forest)]' :
-                                'font-mono text-[var(--ink)]'"></span>
+                                'font-mono text-[var(--ink)]'"
+                            class="text-right"></span>
                     </div>
                 </template>
             </div>
@@ -558,14 +564,14 @@
             <div class="overflow-hidden rounded-xl">
                 <canvas id="roastChart" style="display:block;width:100%;"></canvas>
             </div>
-            <div class="mt-3 flex justify-center gap-6 text-xs text-[var(--muted)]">
+            <div class="mt-3 flex flex-col gap-2 text-xs text-[var(--muted)] sm:flex-row sm:justify-center sm:gap-6">
                 <span class="flex items-center gap-1.5">
-                    <span class="inline-block h-0.5 w-5 rounded bg-[var(--accent)]"></span>
-                    Suhu (°C)
+                    <span class="inline-block h-0.5 w-4 rounded bg-[var(--accent)]"></span>
+                    <span class="whitespace-nowrap">Suhu (°C)</span>
                 </span>
                 <span class="flex items-center gap-1.5">
-                    <span class="inline-block w-5 border-t-2 border-dashed border-red-600"></span>
-                    RoR (°C/menit)
+                    <span class="inline-block w-4 border-t-2 border-dashed border-red-600"></span>
+                    <span class="whitespace-nowrap">RoR (°C/min)</span>
                 </span>
             </div>
         </div>

@@ -49,7 +49,7 @@
                 </nav>
 
                 <div class="flex shrink-0 items-center gap-1.5 sm:gap-3">
-                    {{-- <livewire:cart-badge /> --}}
+                    <livewire:cart-badge />
 
                     @auth
                         <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('orders.index') }}"
