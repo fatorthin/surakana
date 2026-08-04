@@ -48,7 +48,7 @@
                     @endauth
                 </nav>
 
-                <div class="flex items-center gap-2 sm:gap-3">
+                <div class="flex shrink-0 items-center gap-1.5 sm:gap-3">
                     <livewire:cart-badge />
 
                     @auth
@@ -56,9 +56,9 @@
                             class="btn-earth hidden sm:inline-flex">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}"
-                            class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-2xl border border-[var(--line)] bg-white text-[var(--coffee)] shadow-soft transition hover:-translate-y-0.5"
+                            class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--line)] bg-white text-[var(--coffee)] shadow-soft transition hover:-translate-y-0.5 flex-shrink-0"
                             title="Masuk">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M13 3H4a1 1 0 00-1 1v16a1 1 0 001 1h9v-2H4V4h9V3zm9.293 9.293l-3-3a1 1 0 10-1.414 1.414L19.586 11H12v2h7.586l-2.293 2.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414z" />
                             </svg>
