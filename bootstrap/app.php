@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => EnsureUserIsAdmin::class,
         ]);
+
+        // Trust reverse-proxy headers so HTTPS is detected correctly in production.
+        $middleware->trustProxies(at: '**');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
