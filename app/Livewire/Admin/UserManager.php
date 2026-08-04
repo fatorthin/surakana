@@ -66,8 +66,16 @@ class UserManager extends Component
         $this->resetPage();
     }
 
-    public function edit(User $user): void
+    public function edit(int $userId): void
     {
+        $user = User::query()->find($userId);
+
+        if (! $user) {
+            $this->notify('Pengguna tidak ditemukan.', 'error');
+
+            return;
+        }
+
         $this->editingId = $user->id;
         $this->name      = $user->name;
         $this->email     = $user->email;
@@ -81,8 +89,16 @@ class UserManager extends Component
         $this->resetForm();
     }
 
-    public function delete(User $user): void
+    public function delete(int $userId): void
     {
+        $user = User::query()->find($userId);
+
+        if (! $user) {
+            $this->notify('Pengguna tidak ditemukan.', 'error');
+
+            return;
+        }
+
         if ($user->id === Auth::id()) {
             $this->notify('Tidak dapat menghapus akun Anda sendiri.', 'error');
 
