@@ -227,6 +227,35 @@
                     this.$nextTick(() => this._chart());
                 },
 
+                pressNum(n) {
+                    if (this.tempInput === '0' || this.tempInput === '') {
+                        this.tempInput = String(n);
+                    } else {
+                        if (this.tempInput.includes('.')) {
+                            const parts = this.tempInput.split('.');
+                            if (parts[1].length >= 2) return;
+                        }
+                        if (this.tempInput.length >= 6) return;
+                        this.tempInput += String(n);
+                    }
+                },
+
+                pressDot() {
+                    if (!this.tempInput.includes('.')) {
+                        this.tempInput = (this.tempInput || '0') + '.';
+                    }
+                },
+
+                pressClear() {
+                    this.tempInput = '';
+                },
+
+                pressBackspace() {
+                    if (this.tempInput.length > 0) {
+                        this.tempInput = this.tempInput.slice(0, -1);
+                    }
+                },
+
                 doCancel() {
                     this.saveCompleted = true;
                     this._clearStorage();
@@ -492,16 +521,6 @@
             </button>
         </div>
 
-        {{-- ── Sticky timer bar ── --}}
-        <div class="sticky top-[72px] z-[9] overflow-hidden rounded-2xl bg-[var(--coffee)] shadow-lg">
-            <div
-                class="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 sm:py-4">
-                <span x-text="timerDisplay"
-                    class="font-mono text-3xl font-bold tracking-tight text-[var(--accent)] sm:text-5xl">0:00</span>
-                <p x-text="metaText" class="text-xs leading-5 text-white/70 sm:max-w-xs sm:text-right"></p>
-            </div>
-        </div>
-
         {{-- ── Checklist tahapan ── --}}
         <div class="surface-card p-5">
             <p class="eyebrow mb-3">Checklist Tahapan</p>
@@ -521,18 +540,76 @@
             </div>
         </div>
 
-        {{-- ── Temperature input ── --}}
-        <div class="surface-card p-5">
-            <p class="eyebrow mb-3">Input Suhu Manual (°C)</p>
-            <div class="flex flex-col gap-3 sm:flex-row">
-                <input type="number" inputmode="decimal" x-model="tempInput" @keydown.enter.prevent="logTemp()"
-                    class="flex-1 rounded-2xl border border-[var(--line)] bg-white py-3 text-center text-2xl font-mono sm:py-4 sm:text-3xl focus:border-[var(--accent)] focus:ring-0"
-                    placeholder="0°">
-                <button @click="logTemp()" class="btn-earth whitespace-nowrap px-4 sm:px-6">Catat Suhu</button>
+        {{-- ── Temperature Input & Timer Panel ── --}}
+        <div class="surface-card p-5 border border-[var(--accent)]/30">
+            <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[var(--line)] pb-4">
+                <div>
+                    <span x-text="timerDisplay"
+                        class="font-mono text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--coffee)]">0:00</span>
+                    <p x-text="metaText" class="text-xs text-[var(--muted)] mt-1"></p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button x-show="showFinish" x-cloak @click="doFinish()"
+                        class="btn-earth flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Selesai &amp; Simpan</span>
+                    </button>
+                    <button @click="showCancelModal = true"
+                        class="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs font-semibold text-red-700 hover:bg-red-100 transition">
+                        Batal
+                    </button>
+                </div>
             </div>
 
-            <p class="eyebrow mb-2 mt-4">Log Suhu &amp; Checklist</p>
-            <div class="max-h-44 space-y-0.5 overflow-y-auto rounded-xl bg-[var(--canvas)] p-2 sm:p-3">
+            <p class="eyebrow mb-3">Input Suhu Manual (°C)</p>
+
+            {{-- Input display & action --}}
+            <div class="mb-4 flex gap-3">
+                <div class="relative flex-1">
+                    <input type="text" readonly x-model="tempInput" placeholder="0°"
+                        class="w-full rounded-2xl border border-[var(--line)] bg-white py-3 px-4 text-center text-3xl font-mono font-bold text-[var(--coffee)] shadow-inner focus:outline-none focus:ring-2 focus:ring-[var(--accent)]">
+                    <button x-show="tempInput.length > 0" @click="pressClear()" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-gray-100 p-1.5 text-gray-500 hover:bg-gray-200">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <button @click="logTemp()" class="btn-earth whitespace-nowrap px-6 py-3 font-bold text-base shadow-sm">
+                    Catat Suhu
+                </button>
+            </div>
+
+            {{-- Numpad Keyboard --}}
+            <div class="grid grid-cols-4 gap-2 max-w-md mx-auto mb-4">
+                <button type="button" @click="pressNum(7)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">7</button>
+                <button type="button" @click="pressNum(8)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">8</button>
+                <button type="button" @click="pressNum(9)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">9</button>
+                <button type="button" @click="pressBackspace()" class="rounded-xl border border-red-200 bg-red-50 py-3 text-sm font-bold text-red-700 hover:bg-red-100 active:scale-95 transition flex items-center justify-center">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414-6.414A2 2 0 0110.828 5H19a2 2 0 012 2v10a2 2 0 01-2 2h-8.172a2 2 0 01-1.414-.586L3 12z"/>
+                    </svg>
+                </button>
+
+                <button type="button" @click="pressNum(4)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">4</button>
+                <button type="button" @click="pressNum(5)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">5</button>
+                <button type="button" @click="pressNum(6)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">6</button>
+                <button type="button" @click="pressClear()" class="rounded-xl border border-amber-200 bg-amber-50 py-3 text-xs font-bold text-amber-800 hover:bg-amber-100 active:scale-95 transition">C</button>
+
+                <button type="button" @click="pressNum(1)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">1</button>
+                <button type="button" @click="pressNum(2)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">2</button>
+                <button type="button" @click="pressNum(3)" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">3</button>
+                <button type="button" @click="pressDot()" class="rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">.</button>
+
+                <button type="button" @click="pressNum(0)" class="col-span-3 rounded-xl border border-gray-200 bg-gray-50 py-3 text-xl font-bold text-[var(--coffee)] hover:bg-amber-100/50 active:scale-95 transition">0</button>
+                <button type="button" @click="logTemp()" class="rounded-xl bg-[var(--forest)] py-3 text-sm font-bold text-white shadow hover:bg-[var(--forest)]/90 active:scale-95 transition flex items-center justify-center">
+                    ↵
+                </button>
+            </div>
+
+            <p class="eyebrow mb-2">Log Suhu &amp; Checklist</p>
+            <div class="max-h-44 space-y-0.5 overflow-y-auto rounded-xl bg-[var(--canvas)] p-2 sm:p-3 border border-[var(--line)]">
                 <template x-if="combinedLog.length === 0">
                     <p class="text-xs text-[var(--muted)] sm:text-sm">Belum ada data suhu / checklist.</p>
                 </template>
