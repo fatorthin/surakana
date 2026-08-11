@@ -12,6 +12,19 @@ class RoastLogManager extends Component
 
     public string $notification = '';
 
+    // Search, Filters, Sorting & Pagination
+    public string $search = '';
+    public string $filterRoaster = '';
+    public string $filterVarietas = '';
+    public string $sortField = 'roast_date';
+    public string $sortDirection = 'desc';
+    public int $perPage = 10;
+
+    // Comparison Feature
+    public array $selectedIds = [];
+    public bool $showCompareModal = false;
+
+    // Edit Modal Properties
     public ?int $editingId = null;
     public string $roaster_name = '';
     public string $bean_name = '';
@@ -24,6 +37,70 @@ class RoastLogManager extends Component
     public $duration_minutes = null;
     public $duration_seconds = null;
     public ?string $notes = null;
+
+    public function sortBy(string $field): void
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+        $this->resetPage();
+    }
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterRoaster(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterVarietas(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage(): void
+    {
+        $this->resetPage();
+    }
+
+    public function toggleSelectAll(array $pageIds): void
+    {
+        $stringPageIds = array_map('strval', $pageIds);
+        $stringSelectedIds = array_map('strval', $this->selectedIds);
+
+        if (count(array_intersect($stringPageIds, $stringSelectedIds)) === count($stringPageIds)) {
+            $this->selectedIds = array_values(array_diff($stringSelectedIds, $stringPageIds));
+        } else {
+            $this->selectedIds = array_values(array_unique(array_merge($stringSelectedIds, $stringPageIds)));
+        }
+    }
+
+    public function openCompare(): void
+    {
+        if (count($this->selectedIds) >= 2) {
+            $this->showCompareModal = true;
+        } else {
+            $this->notification = 'Pilih minimal 2 batch untuk membandingkan.';
+            $this->js('setTimeout(() => $wire.set("notification", ""), 3000)');
+        }
+    }
+
+    public function closeCompare(): void
+    {
+        $this->showCompareModal = false;
+    }
+
+    public function clearComparison(): void
+    {
+        $this->selectedIds = [];
+        $this->showCompareModal = false;
+    }
 
     protected function rules(): array
     {
@@ -98,6 +175,7 @@ class RoastLogManager extends Component
     public function delete(RoastLog $roastLog): void
     {
         $roastLog->delete();
+        $this->selectedIds = array_values(array_diff(array_map('strval', $this->selectedIds), [(string)$roastLog->id]));
 
         $this->notification = 'Roasting log berhasil dihapus.';
         $this->js('setTimeout(() => $wire.set("notification", ""), 3000)');
@@ -105,7 +183,27 @@ class RoastLogManager extends Component
 
     public function render()
     {
-        $logs = RoastLog::query()->latest('roast_date')->paginate(10);
+        $query = RoastLog::query()
+            ->when($this->search !== '', function ($q) {
+                $q->where(function ($sub) {
+                    $sub->where('bean_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('roaster_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('origin', 'like', '%' . $this->search . '%')
+                        ->orWhere('process_method', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->filterRoaster !== '', function ($q) {
+                $q->where('roaster_name', $this->filterRoaster);
+            })
+            ->when($this->filterVarietas !== '', function ($q) {
+                $q->where('varietas', $this->filterVarietas);
+            });
+
+        $allowedSorts = ['roast_date', 'roaster_name', 'bean_name', 'green_weight', 'duration_seconds'];
+        $sortField = in_array($this->sortField, $allowedSorts) ? $this->sortField : 'roast_date';
+        $sortDirection = $this->sortDirection === 'asc' ? 'asc' : 'desc';
+
+        $logs = (clone $query)->orderBy($sortField, $sortDirection)->paginate($this->perPage);
 
         $recentLogs = RoastLog::query()->latest('roast_date')->take(50)->get();
 
@@ -120,9 +218,20 @@ class RoastLogManager extends Component
             'avg_shrinkage' => $avgShrinkage,
         ];
 
+        $roastersList = RoastLog::query()->whereNotNull('roaster_name')->where('roaster_name', '!=', '')->distinct()->pluck('roaster_name')->filter()->values();
+        $varietasList = RoastLog::query()->whereNotNull('varietas')->where('varietas', '!=', '')->distinct()->pluck('varietas')->filter()->values();
+
+        $comparedLogs = [];
+        if ($this->showCompareModal && count($this->selectedIds) >= 2) {
+            $comparedLogs = RoastLog::whereIn('id', $this->selectedIds)->get();
+        }
+
         return view('livewire.admin.roast-log-manager', [
-            'logs'    => $logs,
-            'summary' => $summary,
+            'logs'          => $logs,
+            'summary'       => $summary,
+            'roastersList'  => $roastersList,
+            'varietasList'  => $varietasList,
+            'comparedLogs'  => $comparedLogs,
         ]);
     }
 }
